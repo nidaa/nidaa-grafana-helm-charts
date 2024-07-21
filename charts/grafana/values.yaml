@@ -139,19 +139,22 @@ dnsConfig: {}
   #     value: "2"
   #   - name: edns0
 
+#---------------nidaa updates
 securityContext:
-  runAsNonRoot: true
-  runAsUser: 472
+ # runAsNonRoot: true
+  runAsUser: 0
   runAsGroup: 472
   fsGroup: 472
+  
+#---------------nidaa updates
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-    - ALL
-  seccompProfile:
-    type: RuntimeDefault
+#containerSecurityContext:
+ # allowPrivilegeEscalation: false
+  #capabilities:
+   # drop:
+   # - ALL
+  #seccompProfile:
+   # type: RuntimeDefault
 
 # Enable creating the grafana configmap
 createConfigmap: true
@@ -189,13 +192,23 @@ downloadDashboards:
   env: {}
   envFromSecret: ""
   resources: {}
+  #nidaa securityContext:
+   #nidaa  allowPrivilegeEscalation: false
+   #nidaa  capabilities:
+    #nidaa  drop:
+   #nidaa   - ALL
+   #nidaa seccompProfile:
+   #nidaa   type: RuntimeDefault
   securityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
+    runAsNonRoot: false
+    runAsUser: 0
     seccompProfile:
       type: RuntimeDefault
+    capabilities:
+      add:
+        - CHOWN
+        - CHMOD
+
   envValueFrom: {}
   #  ENV_NAME:
   #    configMapKeyRef:
@@ -436,6 +449,7 @@ initChownData:
     capabilities:
       add:
         - CHOWN
+        - CHMOD
 
 # Administrator credentials when not using an existing secret (see below)
 adminUser: admin
@@ -1195,13 +1209,28 @@ imageRenderer:
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment container securityContext
+  
   containerSecurityContext:
+   #nidaa seccompProfile:
+   #nidaa   type: RuntimeDefault
+   #nidaa  capabilities:
+    #nidaa  drop: ['ALL']
+    #nidaa allowPrivilegeEscalation: false
+    #nidaa readOnlyRootFilesystem: true
+
+    runAsNonRoot: false
+    runAsUser: 0
     seccompProfile:
       type: RuntimeDefault
     capabilities:
-      drop: ['ALL']
-    allowPrivilegeEscalation: false
-    readOnlyRootFilesystem: true
+      add:
+        - CHOWN
+        - CHMOD
+
+
+
+
+
   ## image-renderer pod annotation
   podAnnotations: {}
   # image-renderer deployment Host Aliases
