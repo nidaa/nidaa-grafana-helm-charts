@@ -142,20 +142,20 @@ dnsConfig:
 
 #---------------nidaa updates
 securityContext:
-  # runAsNonRoot: true
-  runAsUser: 0
+  runAsNonRoot: true
+  runAsUser: 472
   runAsGroup: 472
   fsGroup: 472
 
 #---------------nidaa updates
 
-#containerSecurityContext:
-# allowPrivilegeEscalation: false
-#capabilities:
-# drop:
-# - ALL
-#seccompProfile:
-# type: RuntimeDefault
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
 
 # Enable creating the grafana configmap
 createConfigmap: true
@@ -189,27 +189,44 @@ downloadDashboardsImage:
   sha: ""
   pullPolicy: IfNotPresent
 
+#downloadDashboards:
+#  env: {}
+#  envFromSecret: ""
+#  resources: {}
+#nidaa securityContext:
+#nidaa  allowPrivilegeEscalation: false
+#nidaa  capabilities:
+#nidaa  drop:
+#nidaa   - ALL
+#nidaa seccompProfile:
+#nidaa   type: RuntimeDefault
+#  securityContext:
+#    runAsNonRoot: false
+#    runAsUser: 0
+#    seccompProfile:
+#      type: RuntimeDefault
+#    capabilities:
+#      add:
+#        - CHOWN
+#        - CHMOD
+
+#  envValueFrom: {}
+#  ENV_NAME:
+#    configMapKeyRef:
+#      name: configmap-name
+#      key: value_key
+
 downloadDashboards:
   env: {}
   envFromSecret: ""
   resources: {}
-  #nidaa securityContext:
-  #nidaa  allowPrivilegeEscalation: false
-  #nidaa  capabilities:
-  #nidaa  drop:
-  #nidaa   - ALL
-  #nidaa seccompProfile:
-  #nidaa   type: RuntimeDefault
   securityContext:
-    runAsNonRoot: false
-    runAsUser: 0
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
     seccompProfile:
       type: RuntimeDefault
-    capabilities:
-      add:
-        - CHOWN
-        - CHMOD
-
   envValueFrom: {}
   #  ENV_NAME:
   #    configMapKeyRef:
@@ -1035,7 +1052,7 @@ sidecar:
     # Sets the size limit of the dashboard sidecar emptyDir volume
     sizeLimit: {}
   datasources:
-    enabled: true
+    enabled: false
     # Additional environment variables for the datasourcessidecar
     env: {}
     ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
@@ -1086,11 +1103,11 @@ sidecar:
     # Deploy the datasources sidecar as an initContainer.
     initDatasources: false
     # Sets the size limit of the datasource sidecar emptyDir volume
-    folder: /tmp/datasources
+    # folder: /tmp/datasources
 
     sizeLimit: {}
   plugins:
-    enabled: true
+    enabled: false
     # Additional environment variables for the plugins sidecar
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
@@ -1130,7 +1147,7 @@ sidecar:
     # Sets the size limit of the plugin sidecar emptyDir volume
     sizeLimit: {}
   notifiers:
-    enabled: true
+    enabled: false
     # Additional environment variables for the notifierssidecar
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
@@ -1231,21 +1248,21 @@ imageRenderer:
   # image-renderer deployment container securityContext
 
   containerSecurityContext:
-    #nidaa seccompProfile:
-    #nidaa   type: RuntimeDefault
-    #nidaa  capabilities:
-    #nidaa  drop: ['ALL']
-    #nidaa allowPrivilegeEscalation: false
-    #nidaa readOnlyRootFilesystem: true
-
-    runAsNonRoot: false
-    runAsUser: 0
     seccompProfile:
       type: RuntimeDefault
     capabilities:
-      add:
-        - CHOWN
-        - CHMOD
+      drop: ["ALL"]
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+
+    #runAsNonRoot: false
+    #runAsUser: 0
+    #seccompProfile:
+    #  type: RuntimeDefault
+    #capabilities:
+    #  add:
+    #    - CHOWN
+    #    - CHMOD
 
   ## image-renderer pod annotation
   podAnnotations: {}
