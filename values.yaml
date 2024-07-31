@@ -404,7 +404,7 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: true
+  enabled: false
   # storageClassName: default
   accessModes:
     - ReadWriteOnce
@@ -470,8 +470,7 @@ initChownData:
     capabilities:
       add:
         - CHOWN
-        - CHMOD
-
+        
 # Administrator credentials when not using an existing secret (see below)
 adminUser: admin
 # adminPassword: strongpassword
